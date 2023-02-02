@@ -20,14 +20,14 @@ public class App
       .useBackgroundJobServer()
       .initialize();
 
-      BackgroundJob.enqueue(() -> System.out.println("%s enqueue".formatted(Instant.now())));
+      BackgroundJob.enqueue(() -> new Logic().work("enqueued"));
 
       var job1 = UUID.randomUUID();
-      BackgroundJob.schedule(job1, Instant.now().plusMillis(500), () -> System.out.println("%s schedule".formatted(Instant.now())));
+      BackgroundJob.schedule(job1, Instant.now().plusMillis(500), () -> new Logic().work("scheduled"));
 
-      BackgroundJob.scheduleRecurrently("job2", Duration.ofSeconds(5), () -> System.out.println("%s scheduleRecurrently(Duration)".formatted(Instant.now())));
+      BackgroundJob.scheduleRecurrently("job2", Duration.ofSeconds(5), () -> new Logic().work("recurrent/Duration"));
 
-      BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> new Logic().work());
+      BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> new Logic().work("recurrent/Cron"));
 
       System.in.read();
 
@@ -38,8 +38,8 @@ public class App
     }
 
     public static class Logic {
-      public void work() {
-        System.out.println("%s scheduleRecurrently(Cron)".formatted(Instant.now()));
+      public void work(String type) {
+        System.out.println("%s scheduleRecurrently(%s)".formatted(Instant.now(), type));
       }
     }
 }
