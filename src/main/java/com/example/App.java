@@ -1,5 +1,6 @@
 package com.example;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import org.jobrunr.storage.InMemoryStorageProvider;
  */
 public class App
 {
-    public static void main( String[] args )
+    public static void main( String[] args ) throws IOException
     {
 
       JobRunr.configure()
