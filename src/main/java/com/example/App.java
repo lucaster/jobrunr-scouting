@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.jobrunr.configuration.JobRunr;
-import org.jobrunr.jobs.details.JobDetailsAsmGenerator;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
@@ -17,7 +16,7 @@ public class App
 
       JobRunr.configure()
       .useStorageProvider(new InMemoryStorageProvider())
-      .useJobDetailsGenerator(new JobDetailsAsmGenerator())
+      // .useJobDetailsGenerator(new JobDetailsAsmGenerator())
       .useBackgroundJobServer()
       .initialize();
 
