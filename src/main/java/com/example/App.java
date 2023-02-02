@@ -16,7 +16,6 @@ public class App
     {
 
       JobRunr.configure()
-      // .useJobActivator(applicationContext::getBean)
       .useStorageProvider(new InMemoryStorageProvider())
       .useJobDetailsGenerator(new JobDetailsAsmGenerator())
       .useBackgroundJobServer()
