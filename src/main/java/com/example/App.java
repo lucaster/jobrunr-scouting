@@ -10,6 +10,7 @@ import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
 public class App {
+  
   static Logic logic = new Logic();
 
   public static void main(String[] args) throws IOException {
