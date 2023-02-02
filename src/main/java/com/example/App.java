@@ -27,7 +27,7 @@ public class App
 
       BackgroundJob.scheduleRecurrently("job2", Duration.ofSeconds(5), () -> System.out.println("%s scheduleRecurrently(Duration)".formatted(Instant.now())));
 
-      BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> System.out.println("%s scheduleRecurrently(Cron)".formatted(Instant.now())));
+      BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> new Logic().work());
 
       System.in.read();
 
@@ -35,5 +35,11 @@ public class App
       BackgroundJob.delete("job2");
       BackgroundJob.delete(job1);
       System.out.println("END");
+    }
+
+    public static class Logic {
+      public void work() {
+        System.out.println("%s scheduleRecurrently(Cron)".formatted(Instant.now()));
+      }
     }
 }
