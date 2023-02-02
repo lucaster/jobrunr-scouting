@@ -23,18 +23,18 @@ public class App
 
       BackgroundJob.enqueue(() -> System.out.println("%s enqueue".formatted(Instant.now())));
 
-      var id1 = UUID.randomUUID();
-      BackgroundJob.schedule(id1, Instant.now().plusMillis(500), () -> System.out.println("%s schedule".formatted(Instant.now())));
+      var job1 = UUID.randomUUID();
+      BackgroundJob.schedule(job1, Instant.now().plusMillis(500), () -> System.out.println("%s schedule".formatted(Instant.now())));
 
-      BackgroundJob.scheduleRecurrently("a", Duration.ofSeconds(5), () -> System.out.println("%s scheduleRecurrently(Duration)".formatted(Instant.now())));
+      BackgroundJob.scheduleRecurrently("job2", Duration.ofSeconds(5), () -> System.out.println("%s scheduleRecurrently(Duration)".formatted(Instant.now())));
 
-      BackgroundJob.scheduleRecurrently("b", "*/5 * * * * *", () -> System.out.println("%s scheduleRecurrently(Cron)".formatted(Instant.now())));
+      BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> System.out.println("%s scheduleRecurrently(Cron)".formatted(Instant.now())));
 
       System.in.read();
 
-      BackgroundJob.delete("b");
-      BackgroundJob.delete("a");
-      BackgroundJob.delete(id1);
+      BackgroundJob.delete("job3");
+      BackgroundJob.delete("job2");
+      BackgroundJob.delete(job1);
       System.out.println("END");
     }
 }
