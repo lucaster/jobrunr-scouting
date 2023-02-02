@@ -23,12 +23,18 @@ public class App
 
       BackgroundJob.enqueue(() -> System.out.println("%s enqueue".formatted(Instant.now())));
 
-      BackgroundJob.schedule(UUID.randomUUID(), Instant.now().plusMillis(500), () -> System.out.println("%s schedule".formatted(Instant.now())));
+      var id1 = UUID.randomUUID();
+      BackgroundJob.schedule(id1, Instant.now().plusMillis(500), () -> System.out.println("%s schedule".formatted(Instant.now())));
 
       BackgroundJob.scheduleRecurrently("a", Duration.ofSeconds(5), () -> System.out.println("%s scheduleRecurrently(Duration)".formatted(Instant.now())));
 
       BackgroundJob.scheduleRecurrently("b", "*/5 * * * * *", () -> System.out.println("%s scheduleRecurrently(Cron)".formatted(Instant.now())));
 
       System.in.read();
+
+      BackgroundJob.delete("b");
+      BackgroundJob.delete("a");
+      BackgroundJob.delete(id1);
+      System.out.println("END");
     }
 }
