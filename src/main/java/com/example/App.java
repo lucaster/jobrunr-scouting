@@ -9,37 +9,37 @@ import org.jobrunr.configuration.JobRunr;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
-public class App
-{
-    public static void main( String[] args ) throws IOException
-    {
+public class App {
+  static Logic logic = new Logic();
 
-      JobRunr.configure()
-      .useStorageProvider(new InMemoryStorageProvider())
-      // .useJobDetailsGenerator(new JobDetailsAsmGenerator())
-      .useBackgroundJobServer()
-      .initialize();
+  public static void main(String[] args) throws IOException {
 
-      BackgroundJob.enqueue(() -> new Logic().work("enqueued"));
+    JobRunr.configure()
+        .useStorageProvider(new InMemoryStorageProvider())
+        // .useJobDetailsGenerator(new JobDetailsAsmGenerator())
+        .useBackgroundJobServer()
+        .initialize();
 
-      var job1 = UUID.randomUUID();
-      BackgroundJob.schedule(job1, Instant.now().plusMillis(500), () -> new Logic().work("scheduled"));
+    BackgroundJob.enqueue(() -> logic.work("enqueued"));
 
-      BackgroundJob.scheduleRecurrently("job2", Duration.ofSeconds(5), () -> new Logic().work("recurrent/Duration"));
+    var job1 = UUID.randomUUID();
+    BackgroundJob.schedule(job1, Instant.now().plusMillis(500), () -> logic.work("scheduled"));
 
-      BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> new Logic().work("recurrent/Cron"));
+    BackgroundJob.scheduleRecurrently("job2", Duration.ofSeconds(5), () -> logic.work("recurrent/Duration"));
 
-      System.in.read();
+    BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> logic.work("recurrent/Cron"));
 
-      BackgroundJob.delete("job3");
-      BackgroundJob.delete("job2");
-      BackgroundJob.delete(job1);
-      System.out.println("END");
+    System.in.read();
+
+    BackgroundJob.delete("job3");
+    BackgroundJob.delete("job2");
+    BackgroundJob.delete(job1);
+    System.out.println("END");
+  }
+
+  public static class Logic {
+    public void work(String type) {
+      System.out.println("%s scheduleRecurrently(%s)".formatted(Instant.now(), type));
     }
-
-    public static class Logic {
-      public void work(String type) {
-        System.out.println("%s scheduleRecurrently(%s)".formatted(Instant.now(), type));
-      }
-    }
+  }
 }
