@@ -10,10 +10,6 @@ import org.jobrunr.jobs.details.JobDetailsAsmGenerator;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
-/**
- * Hello world!
- *
- */
 public class App
 {
     public static void main( String[] args ) throws IOException
