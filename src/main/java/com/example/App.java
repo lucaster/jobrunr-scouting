@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.jobrunr.configuration.JobRunr;
 import org.jobrunr.scheduling.BackgroundJob;
+import org.jobrunr.server.BackgroundJobServerConfiguration;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
 public class App {
@@ -14,10 +15,14 @@ public class App {
   static Logic logic = new Logic();
 
   public static void main(String[] args) throws IOException {
-
+   
     JobRunr.configure()
         .useStorageProvider(new InMemoryStorageProvider())
-        // .useJobDetailsGenerator(new JobDetailsAsmGenerator())
+        .useBackgroundJobServer(
+          BackgroundJobServerConfiguration
+          .usingStandardBackgroundJobServerConfiguration()
+          .andPollIntervalInSeconds(5)
+        )
         .useBackgroundJobServer()
         .initialize();
 
