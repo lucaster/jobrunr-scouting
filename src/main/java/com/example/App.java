@@ -1,6 +1,5 @@
 package com.example;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
@@ -11,19 +10,20 @@ import org.jobrunr.server.BackgroundJobServerConfiguration;
 import org.jobrunr.storage.InMemoryStorageProvider;
 
 public class App {
-  
+
   static Logic logic = new Logic();
 
-  public static void main(String[] args) throws IOException {
-   
+  public static void main(String[] args) throws Exception {
+
     JobRunr.configure()
         .useStorageProvider(new InMemoryStorageProvider())
         .useBackgroundJobServer(
           BackgroundJobServerConfiguration
           .usingStandardBackgroundJobServerConfiguration()
+          // Cannot be less than 5 seconds.
+          // Must be equal or shorter than the shortest interval of any recurrent job.
           .andPollIntervalInSeconds(5)
         )
-        .useBackgroundJobServer()
         .initialize();
 
     BackgroundJob.enqueue(() -> logic.work("enqueued"));
@@ -35,12 +35,20 @@ public class App {
 
     BackgroundJob.scheduleRecurrently("job3", "*/5 * * * * *", () -> logic.work("recurrent/Cron"));
 
+    Thread.sleep(15000);
+
+    System.out.println("Press a key to stop");
     System.in.read();
 
     BackgroundJob.delete("job3");
     BackgroundJob.delete("job2");
     BackgroundJob.delete(job1);
+
+    Thread.sleep(5000);
+
     System.out.println("END");
+
+    System.exit(0);
   }
 
   public static class Logic {
