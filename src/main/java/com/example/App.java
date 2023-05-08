@@ -5,9 +5,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 import org.jobrunr.configuration.JobRunr;
+import org.jobrunr.dashboard.JobRunrDashboardWebServer;
 import org.jobrunr.scheduling.BackgroundJob;
 import org.jobrunr.server.BackgroundJobServerConfiguration;
 import org.jobrunr.storage.InMemoryStorageProvider;
+import org.jobrunr.utils.mapper.gson.GsonJsonMapper;
 
 public class App {
 
@@ -15,8 +17,9 @@ public class App {
 
   public static void main(String[] args) throws Exception {
 
-    JobRunr.configure()
-        .useStorageProvider(new InMemoryStorageProvider())
+    final var storageProvider = new InMemoryStorageProvider();
+	JobRunr.configure()
+        .useStorageProvider(storageProvider)
         .useBackgroundJobServer(
           BackgroundJobServerConfiguration
           .usingStandardBackgroundJobServerConfiguration()
@@ -25,6 +28,9 @@ public class App {
           .andPollIntervalInSeconds(5)
         )
         .initialize();
+
+	var dashboard = new JobRunrDashboardWebServer(storageProvider, new GsonJsonMapper(), 8066);
+	dashboard.start();
 
     BackgroundJob.enqueue(() -> logic.work("enqueued"));
 
@@ -47,6 +53,8 @@ public class App {
     Thread.sleep(5000);
 
     System.out.println("END");
+
+    dashboard.stop();
 
     System.exit(0);
   }
